@@ -24,20 +24,27 @@ build: ## Builds the Docker images
 up: ## Start the docker hub in detached mode (no logs)
 	@$(DOCKER_COMP) up --detach
 
-start: build up ## Build and start the containers
+start: up ## Build and start the containers
 
 down: ## Stop the docker hub
 	@$(DOCKER_COMP) down --remove-orphans
 
+stop: ##stop containers 
+	@$(DOCKER_COMP) stop
+
 logs: ## Show live logs
 	@$(DOCKER_COMP) logs --tail=0 --follow
 
+bash:
+	@$(PHP_CONT) bash
+
 sh: ## Connect to the FrankenPHP container
-	@$(PHP_CONT) sh
+	@$(eval c ?=)
+	@$(PHP_CONT) bash -c "$(c)"
 
 test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
 	@$(eval c ?=)
-	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit $(c)
+	@$(DOCKER_COMP) exec -e APP_ENV=test php vendor/bin/phpunit $(c)
 
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
