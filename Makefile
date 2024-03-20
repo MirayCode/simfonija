@@ -38,6 +38,8 @@ logs: ## Show live logs
 bash:
 	@$(PHP_CONT) bash
 
+udi: bash
+
 sh: ## Connect to the FrankenPHP container
 	@$(eval c ?=)
 	@$(PHP_CONT) bash -c "$(c)"
@@ -45,6 +47,9 @@ sh: ## Connect to the FrankenPHP container
 test: ## Start tests with phpunit, pass the parameter "c=" to add options to phpunit, example: make test c="--group e2e --stop-on-failure"
 	@$(eval c ?=)
 	@$(DOCKER_COMP) exec -e APP_ENV=test php vendor/bin/phpunit $(c)
+
+db:
+	@$(DOCKER_COMP) exec database psql -h localhost -d app -U app  -p 5432
 
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
